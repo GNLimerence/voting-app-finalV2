@@ -1,0 +1,23 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Pollster Maker{% endblock %}
+
+{% block main %}
+{% if form.errors %}
+    <div class="alert alert-warning" role="alert">
+        There was an <strong>ERROR</strong> with your registration
+    </div>
+{% endif %}
+    <div class="shadow p-4 mb-5 bg-body rounded">
+    <h1>Register</h1>
+<br/>
+    <form action="{% url 'register' %}" method=POST>
+        {% csrf_token %}
+        {{ form.as_p }}
+<br/><br/>
+        <button type="submit" class="btn btn-info">Register</button>
+    </form>
+    </div>
+<br/><br/>
+
+{% endblock %}

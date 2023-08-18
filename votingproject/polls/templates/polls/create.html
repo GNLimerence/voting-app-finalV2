@@ -1,0 +1,72 @@
+{% extends "polls/base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Create Poll{% endblock %}
+
+{% block main %}
+{% if user.is_authenticated %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Create A New Poll</h3>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="question">Enter Poll Question</label>
+                                {% render_field form.question_text class="form-control" rows="4" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="option1">Choice 1</label>
+                                {% render_field form.op_one class="form-control" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="option2">Choice 2</label>
+                                {% render_field form.op_two class="form-control" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="option3">Choice 3</label>
+                                {% render_field form.op_three class="form-control" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="option4">Choice 4</label>
+                                {% render_field form.op_four class="form-control" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <hr />
+                        <div class="col-lg-4">
+                            <br/>
+                            <button type="submit" class="btn btn-info">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% else %}
+    <h1>Sorry, Please Logged In to create a new Poll</h1>
+    <strong><a href="{% url 'login' %}">Log in Here</a></strong>
+    <br/>
+    If you haven't had an account, please <strong><a href="{% url 'register' %}">Register Here</a></strong>
+{%endif%}
+{% endblock %}

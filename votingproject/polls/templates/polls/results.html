@@ -1,0 +1,89 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Results{% endblock %}
+
+{% block main %}
+{% if user.is_authenticated %}
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Poll Result</h3>
+            </div>
+
+            <div class="panel-body">
+                <h3>{{ poll.question_text }}</h3>
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item">{{ poll.op_one }} &mdash; <strong>{{ poll.op_one_count }}</strong></li>
+                <li class="list-group-item">{{ poll.op_two }} &mdash; <strong>{{ poll.op_two_count }}</strong></li>
+                <li class="list-group-item">{{ poll.op_three }} &mdash; <strong>{{ poll.op_three_count }}</strong></li>
+                <li class="list-group-item">{{ poll.op_four }} &mdash; <strong>{{ poll.op_four_count }}</strong></li>
+                <li class="list-group-item">Owner of the poll: {{poll_owner}}</li>
+            </ul>
+
+            <div class="panel-footer">
+                Total &mdash; <strong>{{ poll.total }}</strong>
+
+            </div>
+            <div id = "myChart">
+
+            </div>
+            <div>
+                <hr/>
+                <center><a href="{% url 'home' %}" ><button class="btn btn-info" >Choose another vote</button></a></center>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var state = {
+        'items': [],
+        'values': [],
+    }
+    var objId = "{{poll.id}}"
+    var dataURL = `/resultdata/${objId}/`
+    $.ajax({
+        method:'GET',
+        url:dataURL,
+        success:function(response){
+              console.log('RESPONSE:', response)
+              for (var i in response){
+                    var key = Object.keys(response[i])[0]
+                    var value = Object.values(response[i])[0]
+                    state.items.push(key)
+                    state.values.push(value)
+              }
+              console.log('RESPONSE:', state)
+              buldiChart()
+        }
+    })
+    function buldiChart(){
+    var chartData = {
+           "type" : "bar",
+           "scale-x" : {
+                "values": state.items
+           },
+           "series" : [
+                {
+                    "values": state.values
+                }
+           ]
+    };
+    zingchart.render({
+        id: "myChart",
+        data: chartData,
+    });
+    }
+</script>
+{% else %}
+    <h1>Sorry, Please Logged In to view our incredible result</h1>
+    <strong><a href="{% url 'login' %}">Log in Here</a></strong>
+    <br/>
+    If you haven't had an account, please <strong><a href="{% url 'register' %}">Register Here</a></strong>
+{%endif%}
+{% endblock %}

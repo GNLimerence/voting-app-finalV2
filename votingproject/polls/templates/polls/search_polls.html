@@ -1,0 +1,55 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Pollster Maker{% endblock %}
+
+{% block main %}
+        {% if searched  %}
+		<center>
+            {%if not user.is_authenticated%}
+                <h1>You are not Logged In, please Log in to use our poll !</h1>
+                <strong><a href="{% url 'login' %}">Log in Here</a></strong>
+                <br/>
+                If you haven't had an account, please <strong><a href="{% url 'register' %}">Register Here</a></strong>
+            {%endif%}
+        </center>
+<br/><br/>
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">The result of you search for {{searched}}</h3>
+            </div>
+
+            <ul class="list-group">
+                {% for poll in polls %}
+                <li class="list-group-item">
+                    <br/>
+                    <div class ="panel panel-info"><div class = "panel-heading"><strong>{{ poll.question_text }}</strong></div></div>
+                    <ul class="list-group">
+                        <li class="list-group-item">{{ poll.op_one }} &mdash; <strong>{{ poll.op_one_count }}</strong></li>
+                        <li class="list-group-item">{{ poll.op_two }} &mdash; <strong>{{ poll.op_two_count }}</strong></li>
+                        <li class="list-group-item">{{ poll.op_three }} &mdash; <strong>{{ poll.op_three_count }}</strong></li>
+                        <li class="list-group-item">{{ poll.op_four }} &mdash; <strong>{{ poll.op_four_count }}</strong></li>
+                    </ul>
+                    <span class="pull-right">
+                </li>
+                <br/>
+                <div>
+                    <center>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'vote' poll.id %}" class="btn btn-info ">Vote this</a> &nbsp;
+                            <a href="{% url 'results' poll.id %}" class="btn btn-default ">View Results</a>
+                            <a href="{% url 'update' poll.id %}" class="btn btn-default ">Update this poll</a>&nbsp;
+                            <a href="{% url 'delete' poll.id %}" class="btn btn-danger ">Delete this poll</a>&nbsp;
+                        {%endif%}
+                    </center>
+                    <br>
+                </div>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+        {% endif %}
+{% endblock %}
